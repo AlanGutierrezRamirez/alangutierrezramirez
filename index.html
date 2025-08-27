@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alan | Programmer CV</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='50' font-family='sans-serif'%3E%3C%2Ftext%3E%3C%2Fsvg%3E">
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import for a professional look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc; /* Light gray background */
+            color: #2d3748; /* Dark text for readability */
+        }
+        .section {
+            padding-top: 5rem; /* Large top padding for blank space */
+            padding-bottom: 5rem; /* Large bottom padding for blank space */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+    </style>
+</head>
+
+<body class="antialiased text-gray-800">
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center transition-all duration-300">
+            <!-- Name/Logo -->
+            <a href="#hero" class="text-xl font-bold text-gray-900 hover:text-blue-600 transition duration-300">Alan Gutierrez Ramirez</a>
+            <!-- Navigation Links -->
+            <ul class="hidden md:flex space-x-6 text-gray-600 font-medium">
+                <li><a href="#about" class="hover:text-blue-600 transition duration-300">About</a></li>
+                <li><a href="#skills" class="hover:text-blue-600 transition duration-300">Skills</a></li>
+                <li><a href="#projects" class="hover:text-blue-600 transition duration-300">Projects</a></li>
+                <li><a href="#contact" class="hover:text-blue-600 transition duration-300">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4">
+
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center justify-center text-center section">
+            <div>
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-4 text-gray-900 animate-fade-in-up">
+                    Hello, I'm <span class="text-blue-600">Alan Gutierrez Ramirez</span>.
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 animate-fade-in-up delay-100">
+                    A passionate software engineer specializing in elegant and efficient solutions.
+                </p>
+                <div class="mt-8 animate-fade-in-up delay-200">
+                    <a href="#projects" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl">
+                        View My Work
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-4xl font-bold mb-4 text-gray-900">About Me</h2>
+                <p class="text-gray-700 leading-relaxed text-lg">
+                    A highly motivated software developer with a strong foundation in 3D graphics programming. 
+                    I was a key member of a student team that developed the award-winning game Shelley Manor, which 
+                    is now available on Steam. My technical skills extend to creating core systems from the ground up, 
+                    demonstrated by my development of a 3D graphics engine using OpenGL.  
+                    My goal is to leverage my skills to build high-quality, impactful software.
+                </p>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">My Skills</h2>
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+                <!-- Skill Card -->
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Languages</h3>
+                    <ul class="text-gray-600 space-y-2">
+                        <li>C++</li>
+                        <li>C</li>
+                        <li>C#</li>
+                        <li>Python</li>
+                    </ul>
+                </div>
+                <!-- Skill Card
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Frontend</h3>
+                    <ul class="text-gray-600 space-y-2">
+                        <li>React</li>
+                        <li>Vue.js</li>
+                        <li>HTML5 & CSS3</li>
+                        <li>Tailwind CSS</li>
+                    </ul>
+                </div> -->
+                <!-- Skill Card -->
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Technologies</h3>
+                    <ul class="text-gray-600 space-y-2">
+                        <li>OpenGL</li>
+                        <li>Unreal Engine 5</li>
+                        <li>Unity</li>
+                        <li>PostgreSQL</li>
+                        <li>imGui</li> 
+                    </ul>
+                </div>
+                <!-- Skill Card -->
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Tools & Platforms</h3>
+                    <ul class="text-gray-600 space-y-2">
+                        <li>Git & GitHub</li>
+                        <li>Jira</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">My Projects</h2>
+            <div class="space-y-20">
+                <!-- Project 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="order-2 md:order-1">
+                        <h3 class="text-3xl font-bold mb-4 text-gray-900">Shelley Manor</h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            As a member of an 18-person student team at ESAT, I was a key contributor to <strong>Shelley Manor</strong>, 
+                            an award-winning game now published on <span  class="text-blue-600"><strong>Steam</strong></span>. Developed using <span class="text-blue-600"><strong>Unreal Engine 5</strong></span>, 
+                            the project involved a collaborative effort of 8 programmers, 8 artists, and 3 game developers. 
+                            My work on this project, along with the in-game sounds and music provided by Berklee students, 
+                            led to the game winning <strong>The Best Student Game</strong> at <span  class="text-blue-600"> <strong>the Latam Games Com 2025</strong></span>. 
+                            This experience demonstrates my ability to thrive in a large, multidisciplinary team environment
+                            to deliver a polished, commercial-ready product.
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">Live Demo</a>
+                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+                        </div>
+                    </div>
+                    <!-- This div holds the video. Replace the video source with your own MP4 file. -->
+                    <div class="order-1 md:order-2 bg-gray-200 rounded-lg shadow-lg overflow-hidden flex items-center justify-center p-2">
+                        <video controls muted autoplay loop playsinline class="w-full h-auto rounded-md border-2 border-gray-300">
+                            <!-- Replace with your actual video URL -->
+                            <source src="https://youtu.be/z63nXnn1NeM" type="video/mp4">
+                            
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+                <div class="aspect-w-16 aspect-h-9 overflow-hidden rounded-lg">
+                    <!-- Replace the video ID with your own YouTube video ID. -->
+                    <iframe
+                        src="https://www.youtube.com/watch?v=WLb5xi-9dg0"
+                        class="w-full h-full"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        title="YouTube video player"
+                    ></iframe>
+                 </div>
+
+                <!-- Project 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <!-- This div holds the video. Replace the video source with your own MP4 file. -->
+                    <div class="bg-gray-200 rounded-lg shadow-lg overflow-hidden flex items-center justify-center p-2">
+                        <video controls muted autoplay loop playsinline class="w-full h-auto rounded-md border-2 border-gray-300">
+                            <!-- Replace with your actual video URL -->
+                            <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-person-typing-on-a-macbook-963-large.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold mb-4 text-gray-900">JAM Engine</h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            As part of a final project at ESAT, I developed a highly efficient 3D graphics engine from scratch using <span  class="text-blue-600"><strong>OpenGL</strong></span>. 
+                            This engine was engineered with an Entity Component System (ECS) for a highly performant and flexible architecture.
+                            Key features include a fly camera for seamless navigation, dynamic lighting, and advanced volumetric lighting. 
+                            This project demonstrates my deep understanding of core rendering principles and system-level design.
+
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">Live Demo</a>
+                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- You can add more projects here following the same structure -->
+
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section text-center">
+            <h2 class="text-4xl font-bold mb-4 text-gray-900">Get In Touch</h2>
+            <p class="text-gray-700 mb-8 max-w-2xl mx-auto">
+                I'm currently seeking new opportunities and challenges. Feel free to reach out to me via email or connect with me on social media.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="mailto:alangutier24@gmail.com" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl">
+                    Email Me
+                </a>
+                <a href="https://www.linkedin.com/in/alan-gutierrez-ramirez-81379921b" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl" target="_blank" rel="noopener noreferrer">
+                    LinkedIn
+                </a>
+                <a href="https://alangutier24.github.io/" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl" target="_blank" rel="noopener noreferrer">
+                    GitHub
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 mt-12 text-center text-sm text-gray-600">
+        <p>&copy; 2025 Alan Gutierrez Ramirez. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for smooth scrolling & simple effects -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Simple effect to change header background on scroll
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-white', 'shadow-md');
+            } else {
+                header.classList.remove('bg-white', 'shadow-md');
+            }
+        });
+    </script>
+
+</body>
+</html>
