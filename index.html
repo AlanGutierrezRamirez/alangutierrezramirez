@@ -158,36 +158,33 @@
                     </div>
                     <!-- This div holds the video. Replace the video source with your own MP4 file. -->
                     <div class="order-1 md:order-2 bg-gray-200 rounded-lg shadow-lg overflow-hidden flex items-center justify-center p-2">
-                        <video controls muted autoplay loop playsinline class="w-full h-auto rounded-md border-2 border-gray-300">
-                            <!-- Replace with your actual video URL -->
-                            <source src="https://youtu.be/z63nXnn1NeM" type="video/mp4">
-                            
-                            Your browser does not support the video tag.
-                        </video>
+                        <iframe
+                            src="https://www.youtube.com/embed/WLb5xi-9dg0"
+                            class="w-full h-full"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            title="YouTube video player"
+                        ></iframe>
                     </div>
                 </div>
 
                 <div class="aspect-w-16 aspect-h-9 overflow-hidden rounded-lg">
-                    <!-- Replace the video ID with your own YouTube video ID. -->
-                    <iframe
-                        src="https://www.youtube.com/embed/WLb5xi-9dg0"
-                        class="w-full h-full"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        title="YouTube video player"
-                    ></iframe>
+  
                  </div>
 
                 <!-- Project 2 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <!-- This div holds the video. Replace the video source with your own MP4 file. -->
                     <div class="bg-gray-200 rounded-lg shadow-lg overflow-hidden flex items-center justify-center p-2">
-                        <video controls muted autoplay loop playsinline class="w-full h-auto rounded-md border-2 border-gray-300">
-                            <!-- Replace with your actual video URL -->
-                            <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-person-typing-on-a-macbook-963-large.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+                        <iframe
+                            src="https://www.youtube.com/embed/WLb5xi-9dg0"
+                            class="w-full h-full"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            title="YouTube video player"
+                        ></iframe>
                     </div>
                     <div>
                         <h3 class="text-3xl font-bold mb-4 text-gray-900">JAM Engine</h3>
@@ -209,6 +206,73 @@
 
             </div>
         </section>
+
+ <!-- Student Projects Section -->
+        <section id="student-projects" class="section">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">Student Projects & Experiments</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Student Project Card 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
+                    <!-- Video for the project -->
+                    <div class="bg-gray-200 rounded-lg overflow-hidden">
+                        <video controls muted autoplay loop playsinline class="w-full h-auto">
+                            <source src="videos/ThisVideoTookMe3YearsToMake.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Progression at ESAT</h3>
+                        <p class="text-gray-700 text-sm">
+                            This is a small video that show cases my progression while studying at ESAT. 
+                        </p>
+                        <!-- <div class="mt-4">
+                            <a href="#" class="text-blue-600 hover:underline font-semibold text-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Student Project Card 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
+                    <!-- Video for the project -->
+                    <div class="bg-gray-200 rounded-lg overflow-hidden">
+                        <video controls muted autoplay loop playsinline class="w-full h-auto">
+                            <source src="videos/engine.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-900">3D Graphic Engine</h3>
+                        <p class="text-gray-700 text-sm">
+                            A C++ project to build a 3D graphical engine ready to work as a base for a video game engine.
+                        </p>
+                        <!-- <div class="mt-4">
+                            <a href="#" class="text-blue-600 hover:underline font-semibold text-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Student Project Card 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
+                    <!-- Video for the project -->
+                    <div class="bg-gray-200 rounded-lg overflow-hidden">
+                        <video controls muted autoplay loop playsinline class="w-full h-auto">
+                            <source src="videos/starcastle.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Summer Project</h3>
+                        <p class="text-gray-700 text-sm">
+                            This was the summer projects of my first year.
+                        </p>
+                        <!-- <div class="mt-4">
+                            <a href="#" class="text-blue-600 hover:underline font-semibold text-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <!-- Contact Section -->
         <section id="contact" class="section text-center">
@@ -261,4 +325,3 @@
 
 </body>
 </html>
-
