@@ -321,7 +321,23 @@
                 header.classList.remove('bg-white', 'shadow-md');
             }
         });
+                // *** New Script to Handle Autoplay on Mobile Devices ***
+        document.addEventListener('DOMContentLoaded', () => {
+            // Define the media query for a mobile device screen size (e.g., up to 768px wide)
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            if (isMobile) {
+                // Find all video elements on the page
+                const videos = document.querySelectorAll('video');
+
+                videos.forEach(video => {
+                    // Remove the autoplay attribute
+                    video.removeAttribute('autoplay');
+                });
+            }
+        });
     </script>
 
 </body>
 </html>
+
