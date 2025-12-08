@@ -1,343 +1,644 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alan | Programmer CV</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='50' font-family='sans-serif'%3E%3C%2Ftext%3E%3C%2Fsvg%3E">
-    <!-- Tailwind CSS CDN for easy styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>DEV_PORTFOLIO // SYSTEM_READY</title>
     <style>
-        /* Custom font import for a professional look */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7fafc; /* Light gray background */
-            color: #2d3748; /* Dark text for readability */
+        /* * 1. THE AESTHETIC 
+         * Using a 'Terminal' style to suggest backend/engine mastery.
+         */
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            color: #e0e0e0;
+            font-family: 'Fira Code', monospace;
+            overflow: hidden; /* Prevent native scroll, we handle it via WebGL */
         }
-        .section {
-            padding-top: 5rem; /* Large top padding for blank space */
-            padding-bottom: 5rem; /* Large bottom padding for blank space */
+
+        /* The 3D Canvas */
+        #gl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
+
+        /* The UI Layer - Floats above the 3D world */
+        #ui-layer {
+            position: fixed;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes Header to top, Footer to bottom */
+            padding: 2rem;
+            box-sizing: border-box;
         }
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 10px;
+
+        /* CRT Scanline Effect Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+            z-index: 20;
+            pointer-events: none;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 10px;
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a0aec0;
+
+        /* Project Info UI */
+        #project-info {
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 150, 0.5);
+            pointer-events: auto;
+        }
+
+        .meta {
+            color: #00ff96;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #aaaaaa;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            pointer-events: auto;
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid #00ff96;
+            color: #00ff96;
+            font-family: 'Fira Code', monospace;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #00ff96;
+            color: #000;
+            box-shadow: 0 0 15px #00ff96;
+        }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 1s ease;
+        }
+
+        .dashboard-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        pointer-events: auto; /* Enable clicking on links/buttons */
+        gap: 20px;
+        }
+
+        /* Left side: Project Controls (Moved here from previous code) */
+        .project-controls-area {
+            max-width: 40%;
+        }
+
+        /* Right side: The Profile & CV Area */
+        .profile-section {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            text-align: right;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for readability */
+            padding: 20px;
+            border: 1px solid #333;
+            backdrop-filter: blur(5px);
+        }
+
+        /* The Circular Profile Pic */
+        .profile-pic-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; /* MAKES IT A CIRCLE */
+            object-fit: cover;
+            border: 2px solid #00ff96;
+            box-shadow: 0 0 15px rgba(0, 255, 150, 0.3);
+        }
+
+        /* A little "Online" status dot */
+        .status-dot {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 15px;
+            height: 15px;
+            background-color: #00ff96;
+            border-radius: 50%;
+            border: 2px solid #000;
+            box-shadow: 0 0 10px #00ff96;
+        }
+
+        /* The "Terminal" for Work Experience */
+        .xp-terminal {
+            width: 300px;
+            height: 120px;
+            overflow-y: auto; /* Scrollable if text is long */
+            font-size: 0.8rem;
+            color: #aaaaaa;
+            border-right: 1px solid #00ff96;
+            padding-right: 15px;
+            text-align: right;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Custom Scrollbar for Chrome/Safari/Edge */
+        .xp-terminal::-webkit-scrollbar { width: 5px; }
+        .xp-terminal::-webkit-scrollbar-thumb { background: #00ff96; }
+        .xp-terminal::-webkit-scrollbar-track { background: #111; }
+
+        .xp-entry { margin-bottom: 15px; }
+        .xp-role { color: #fff; font-weight: bold; display: block; }
+        .xp-date { color: #00ff96; font-size: 0.7rem; }
+
+        /* The CV Download Button */
+        .cv-btn {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            background: #00ff96;
+            color: #000;
+            font-weight: bold;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .cv-btn:hover {
+            background: #fff;
+            box-shadow: 0 0 15px #fff;
         }
     </style>
 </head>
+<body>
 
-<body class="antialiased text-gray-800">
+    <div class="scanlines"></div>
 
-    <!-- Header & Navigation -->
-    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
-        <nav class="container mx-auto px-4 py-4 flex justify-between items-center transition-all duration-300">
-            <!-- Name/Logo -->
-            <a href="#hero" class="text-xl font-bold text-gray-900 hover:text-blue-600 transition duration-300">Alan Gutierrez Ramirez</a>
-            <!-- Navigation Links -->
-            <ul class="hidden md:flex space-x-6 text-gray-600 font-medium">
-                <li><a href="#about" class="hover:text-blue-600 transition duration-300">About</a></li>
-                <li><a href="#skills" class="hover:text-blue-600 transition duration-300">Skills</a></li>
-                <li><a href="#projects" class="hover:text-blue-600 transition duration-300">Projects</a></li>
-                <li><a href="#contact" class="hover:text-blue-600 transition duration-300">Contact</a></li>
-            </ul>
-        </nav>
+<div id="loader">
+    <div>INITIALIZING ENGINE...</div>
+    <div id="loading-text">0%</div>
+    <button id="start-btn" style="display:none; margin-top: 20px;">[ ENTER SYSTEM ]</button>
+</div>
+
+<div id="ui-layer">
+    <header>
+        <div>// SYSTEM_USER: Alan Gutierrez Ramirez</div>
+        <div>FPS: <span id="fps">120</span></div>
     </header>
 
-    <main class="container mx-auto px-4">
+    <div style="flex-grow: 1;"></div>
 
-        <!-- Hero Section -->
-        <section id="hero" class="min-h-screen flex items-center justify-center text-center section">
-            <div>
-                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-4 text-gray-900 animate-fade-in-up">
-                    Hello, I'm <span class="text-blue-600">Alan Gutierrez Ramirez</span>.
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-600 animate-fade-in-up delay-100">
-                    A passionate software engineer specializing in elegant and efficient solutions.
-                </p>
-                <div class="mt-8 animate-fade-in-up delay-200">
-                    <a href="#projects" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl">
-                        View My Work
-                    </a>
-                </div>
+    <div class="dashboard-footer">
+        
+        <div class="project-controls-area" id="project-info">
+            <span class="meta" id="p-tech">NREAL ENGINE 5 // C++ // Unity // C# // Shaders</span>
+            <h1 id="p-title">Through the years</h1>
+            <p id="p-desc">A journey in my development for video game development</p>
+            
+            <div class="controls">
+                <button onclick="prevProject()">&lt; PREV</button>
+                <button onclick="nextProject()">NEXT &gt;</button>
             </div>
-        </section>
+        </div>
 
-        <!-- About Section -->
-        <section id="about" class="section">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl font-bold mb-4 text-gray-900">About Me</h2>
-                <p class="text-gray-700 leading-relaxed text-lg">
-                    A highly motivated software developer with a strong foundation in 3D graphics programming. 
-                    I was a key member of a student team that developed the award-winning game Shelley Manor, which 
-                    is now available on Steam. My technical skills extend to creating core systems from the ground up, 
-                    demonstrated by my development of a 3D graphics engine using OpenGL.  
-                    My goal is to leverage my skills to build high-quality, impactful software.
-                </p>
+        <div class="profile-section">
+            
+            <div class="xp-terminal">
+                <div class="xp-entry">
+                    <span class="xp-role">SOFTWARE DEVELOPER</span>
+                    <span class="xp-date">2024 - 2025</span>
+                    <br>Optimized rendering pipelines and implemented ray-tracing features.
+                </div>
+                <div class="xp-entry">
+                    <span class="xp-role">GAMEPLAY DEV</span>
+                    <span class="xp-date">2018 - 2021 // INDIE STUDIO</span>
+                    <br>Shipped 2 titles on Steam using Unity & C#.
+                </div>
+                <a href="./my-cv.pdf" class="cv-btn" target="_blank">[ DOWNLOAD_CV.PDF ]</a>
             </div>
-        </section>
 
-        <!-- Skills Section -->
-        <section id="skills" class="section">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">My Skills</h2>
-            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
-                <!-- Skill Card -->
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Languages</h3>
-                    <ul class="text-gray-600 space-y-2">
-                        <li>C++</li>
-                        <li>C</li>
-                        <li>C#</li>
-                        <li>Python</li>
-                    </ul>
-                </div>
-                <!-- Skill Card
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Frontend</h3>
-                    <ul class="text-gray-600 space-y-2">
-                        <li>React</li>
-                        <li>Vue.js</li>
-                        <li>HTML5 & CSS3</li>
-                        <li>Tailwind CSS</li>
-                    </ul>
-                </div> -->
-                <!-- Skill Card -->
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Technologies</h3>
-                    <ul class="text-gray-600 space-y-2">
-                        <li>OpenGL</li>
-                        <li>Unreal Engine 5</li>
-                        <li>Unity</li>
-                        <li>PostgreSQL</li>
-                        <li>imGui</li> 
-                    </ul>
-                </div>
-                <!-- Skill Card -->
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Tools & Platforms</h3>
-                    <ul class="text-gray-600 space-y-2">
-                        <li>Git & GitHub</li>
-                        <li>Jira</li>
-                    </ul>
-                </div>
+            <div class="profile-pic-container">
+                <img src="./imgs/selfie.jpeg" class="profile-img" alt="Developer Profile">
+                <div class="status-dot"></div>
             </div>
-        </section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="section">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">My Projects</h2>
-            <div class="space-y-20">
-                <!-- Project 1 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div class="order-2 md:order-1">
-                        <h3 class="text-3xl font-bold mb-4 text-gray-900">Shelley Manor</h3>
-                        <p class="text-gray-700 leading-relaxed mb-4">
-                            As a member of an 18-person student team at ESAT, I was a key contributor to <strong>Shelley Manor</strong>, 
-                            an award-winning game now published on <span  class="text-blue-600"><strong>Steam</strong></span>. Developed using <span class="text-blue-600"><strong>Unreal Engine 5</strong></span>, 
-                            the project involved a collaborative effort of 8 programmers, 8 artists, and 3 game developers. 
-                            My work on this project, along with the in-game sounds and music provided by Berklee students, 
-                            led to the game winning <strong>The Best Student Game</strong> at <span  class="text-blue-600"> <strong>the Latam Games Com 2025</strong></span>. 
-                            This experience demonstrates my ability to thrive in a large, multidisciplinary team environment
-                            to deliver a polished, commercial-ready product.
-                        </p>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">Live Demo</a>
-                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
-                        </div>
-                    </div>
-                    <!-- This div holds the video. Replace the video source with your own MP4 file. -->
-                    <div class="order-1 md:order-2 bg-gray-200 rounded-lg shadow-lg overflow-hidden flex items-center justify-center p-2">
-                        <iframe
-                            src="https://www.youtube.com/embed/z63nXnn1NeM"
-                            class="w-full h-full"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            title="Shelley Manor"
-                        ></iframe>
-                    </div>
-                </div>
+        </div>
+    </div>
+</div>
 
-                <!-- Project 2 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <!-- This div holds the video. Replace the video source with your own MP4 file. -->
-                    <div class="bg-gray-200 rounded-lg shadow-lg overflow-hidden flex items-center justify-center p-2">
-                        <!-- <iframe
-                            src="https://www.youtube.com/embed/WLb5xi-9dg0"
-                            class="w-full h-full"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            title="3D Graphic Engine"
-                        ></iframe>           -->
-                        <video controls muted autoplay loop playsinline class="w-full h-auto">
-                            <source src="videos/engine.webm" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold mb-4 text-gray-900">3D Graphic Engine</h3>
-                        <p class="text-gray-700 leading-relaxed mb-4">
-                            As part of a final project at ESAT, I developed a highly efficient 3D graphics engine from scratch using <span  class="text-blue-600"><strong>OpenGL</strong></span>. 
-                            This engine was engineered with an Entity Component System (ECS) for a highly performant and flexible architecture.
-                            Key features include a fly camera for seamless navigation, dynamic lighting, and advanced volumetric lighting. 
-                            This project demonstrates my deep understanding of core rendering principles and system-level design.
+    <canvas id="gl-canvas"></canvas>
 
-                        </p>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">Live Demo</a>
-                            <a href="#" class="text-blue-600 hover:underline font-semibold" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
-                        </div>
-                    </div>
-                </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 
-                <!-- You can add more projects here following the same structure -->
-
-            </div>
-        </section>
-
- <!-- Student Projects Section -->
-        <section id="student-projects" class="section">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">Student Projects & Experiments</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Student Project Card 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
-                    <!-- Video for the project -->
-                    <div class="bg-gray-200 rounded-lg overflow-hidden">
-                        <video controls muted autoplay loop playsinline class="w-full h-auto">
-                            <source src="videos/ThisVideoTookMe3YearsToMake.webm" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                    <div class="p-4 flex-1 flex flex-col justify-between">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Progression at ESAT</h3>
-                        <p class="text-gray-700 text-sm">
-                            This is a small video that show cases my progression while studying at ESAT. 
-                        </p>
-                        <!-- <div class="mt-4">
-                            <a href="#" class="text-blue-600 hover:underline font-semibold text-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-                        </div> -->
-                    </div>
-                </div>
-
-                <!-- Student Project Card 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
-                    <!-- Video for the project -->
-                    <div class="bg-gray-200 rounded-lg overflow-hidden">
-                        <video controls muted autoplay loop playsinline class="w-full h-auto">
-                            <source src="videos/unity_chat.webm" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                    <div class="p-4 flex-1 flex flex-col justify-between">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Unity Chat</h3>
-                        <p class="text-gray-700 text-sm">
-                            A Unity system for having in game conversations. 
-                        </p>
-                        <!-- <div class="mt-4">
-                            <a href="#" class="text-blue-600 hover:underline font-semibold text-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-                        </div> -->
-                    </div>
-                </div>
-
-                <!-- Student Project Card 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col p-4">
-                    <!-- Video for the project -->
-                    <div class="bg-gray-200 rounded-lg overflow-hidden">
-                        <video controls muted autoplay loop playsinline class="w-full h-auto">
-                            <source src="videos/starcastle.webm" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                    <div class="p-4 flex-1 flex flex-col justify-between">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Summer Project</h3>
-                        <p class="text-gray-700 text-sm">
-                            This was the summer projects of my first year.
-                        </p>
-                        <!-- <div class="mt-4">
-                            <a href="#" class="text-blue-600 hover:underline font-semibold text-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Contact Section -->
-        <section id="contact" class="section text-center">
-            <h2 class="text-4xl font-bold mb-4 text-gray-900">Get In Touch</h2>
-            <p class="text-gray-700 mb-8 max-w-2xl mx-auto">
-                I'm currently seeking new opportunities and challenges. Feel free to reach out to me via email or connect with me on social media.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="mailto:alangutier24@gmail.com" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl">
-                    Email Me
-                </a>
-                <a href="https://www.linkedin.com/in/alan-gutierrez-ramirez-81379921b" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl" target="_blank" rel="noopener noreferrer">
-                    LinkedIn
-                </a>
-                <a href="https://alangutier24.github.io/" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-full transition duration-300 shadow-lg hover:shadow-xl" target="_blank" rel="noopener noreferrer">
-                    GitHub
-                </a>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-100 py-6 mt-12 text-center text-sm text-gray-600">
-        <p>&copy; 2025 Alan Gutierrez Ramirez. All rights reserved.</p>
-    </footer>
-
-    <!-- JavaScript for smooth scrolling & simple effects -->
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        // --------------------------------------------------------
+        // 2. CONFIGURATION & DATA
+        // --------------------------------------------------------
+        
+        // REPLACE THESE URLS WITH YOUR ACTUAL VIDEO FILES
+        // Note: For this demo, I am generating textures via code, 
+        // but the logic below supports real video files.
+        const projects = [
+            {
+                title: "Through the years",
+                tech: "UNREAL ENGINE 5 // C++ // Unity // C# // Shaders // OpenGL",
+                desc: "A journey in my development for video game development",
+                color: new THREE.Vector3(0.1, 1.5, 0.5), // Greenish
+                video: "./videos/ThisVideoTookMe3YearsToMake.webm" 
+            },
+            {
+                title: "Engine",
+                tech: "OpenGL // c++ // GitHub // SQL",
+                desc: "A custom 3D game engine built from scratch to handle millions ov vertices",
+                color: new THREE.Vector3(1.5, 0.1, 0.2), // Reddish
+                video: "./videos/engine.webm"
+            },
+            {
+                title: "Unity",
+                tech: "C#",
+                desc: "A mechanic for conversations made for unity",
+                color: new THREE.Vector3(0.2, 0.5, 2.0), // Blueish
+                video: "./videos/unity_chat.webm"
+            },
+            {
+                title: "Star Castle",
+                tech: "C++",
+                desc: "My version of Star Castle made entirely from scratch",
+                color: new THREE.Vector3(0.2, 0.5, 2.0), // Blueish
+                video: "./videos/starcastle.webm"
+            }
+        ];
+
+        let currentProjectIndex = 0;
+
+        // --------------------------------------------------------
+        // 3. THE SHADER CODE (The "Mastery" Part)
+        // --------------------------------------------------------
+        
+        // Vertex Shader: Determines the geometry shape
+        const vertexShader = `
+            varying vec2 vUv;
+            uniform float uTime;
+            uniform float uHover;
+
+            void main() {
+                vUv = uv;
+                vec3 pos = position;
+                
+                // Subtle breathing effect
+                pos.z += sin(pos.x * 2.0 + uTime) * 0.05;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+            }
+        `;
+
+        // Fragment Shader: Handles the video pixels and glitch effects
+        const fragmentShader = `
+            uniform sampler2D uTexture;
+            uniform float uTime;
+            uniform float uHover; // 0.0 to 1.0
+            uniform float uGlitchIntensity;
+            varying vec2 vUv;
+
+            // Pseudo-random function
+            float random(vec2 st) {
+                return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+            }
+
+            void main() {
+                vec2 uv = vUv;
+
+                // 1. Glitch Displacement logic
+                float glitch = step(0.98, random(vec2(uTime * 10.0, uv.y)));
+                float displacement = glitch * uGlitchIntensity * 0.05;
+                uv.x += displacement;
+
+                // 2. Chromatic Aberration (RGB Split)
+                float shift = uHover * 0.02 + (glitch * 0.01);
+                
+                float r = texture2D(uTexture, uv + vec2(shift, 0.0)).r;
+                float g = texture2D(uTexture, uv).g;
+                float b = texture2D(uTexture, uv - vec2(shift, 0.0)).b;
+
+                // 3. Scanline dimming
+                float scanline = sin(uv.y * 200.0 + uTime * 5.0) * 0.04;
+                
+                vec3 color = vec3(r, g, b) - scanline;
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        // --------------------------------------------------------
+        // 4. THREE.JS SETUP
+        // --------------------------------------------------------
+
+        const canvas = document.querySelector('#gl-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance optimization
+
+        const scene = new THREE.Scene();
+        
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 5;
+
+        // Mouse tracking for parallax
+        const mouse = new THREE.Vector2();
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
         });
 
-        // Simple effect to change header background on scroll
-        const header = document.querySelector('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('bg-white', 'shadow-md');
+        // --------------------------------------------------------
+        // 5. PROJECT DISPLAY PLANE
+        // --------------------------------------------------------
+
+        // NOTE: Since we don't have real videos loaded in this demo, 
+        // I'm creating a dummy texture generator. 
+        // In production, you would use: new THREE.VideoTexture(videoElement)
+        function createPlaceholderTexture(colorVec) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 288;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = `rgb(${colorVec.x*50}, ${colorVec.y*50}, ${colorVec.z*50})`;
+            ctx.fillRect(0,0, 512, 288);
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "40px monospace";
+            ctx.fillText("VIDEO PREVIEW", 100, 144);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // REPLACE YOUR OLD loadVideoTexture FUNCTION WITH THIS:
+
+        function loadVideoTexture(url) {
+            const video = document.createElement('video');
+            video.src = url;
+            video.crossOrigin = "anonymous";
+            video.loop = true;
+            video.muted = true; // MUST BE MUTED FOR AUTOPLAY
+            video.playsInline = true; // FOR MOBILE
+
+            // Debugging: Check if file exists
+            video.onerror = function() {
+                console.error("ERROR LOADING VIDEO:", url);
+                console.error("Check if the file name is correct and in the same folder.");
+            };
+
+            // Don't play yet. We wait for the user to click "Enter".
+            
+            const texture = new THREE.VideoTexture(video);
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.format = THREE.RGBAFormat; // RGBA for WebM Transparency
+            
+            // Save video reference to the texture so we can play it later
+            texture.image = video; 
+            
+            return texture;
+        }
+
+        const geometry = new THREE.PlaneGeometry(3.2, 1.8, 32, 32); // 16:9 Aspect Ratio
+        
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                uTime: { value: 0 },
+                uHover: { value: 0 },
+                uGlitchIntensity: { value: 0 },
+               uTexture: { value: loadVideoTexture(projects[0].video) }
+            },
+            // wireframe: true // Uncomment to look extra techy
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        // Background Particles (Stars)
+        const starsGeo = new THREE.BufferGeometry();
+        const starsCount = 1000;
+        const posArray = new Float32Array(starsCount * 3);
+        for(let i=0; i<starsCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starsMat = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x00ff96,
+            transparent: true,
+            opacity: 0.4
+        });
+        const stars = new THREE.Points(starsGeo, starsMat);
+        scene.add(stars);
+
+        // --------------------------------------------------------
+        // 6. ANIMATION & INTERACTION LOOP
+        // --------------------------------------------------------
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+
+            // Update Uniforms
+            material.uniforms.uTime.value = elapsedTime;
+
+            // Smooth Mouse Parallax for the Mesh
+            // Uses Linear Interpolation (Lerp) for smoothness
+            mesh.rotation.x = THREE.MathUtils.lerp(mesh.rotation.x, mouse.y * 0.2, 0.05);
+            mesh.rotation.y = THREE.MathUtils.lerp(mesh.rotation.y, mouse.x * 0.2, 0.05);
+
+            // Rotate stars slowly
+            stars.rotation.y = elapsedTime * 0.05;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+
+            // Update simple FPS counter
+            if(Math.random() > 0.95) document.getElementById('fps').innerText = Math.round(1000 / (performance.now() - lastFrame));
+            lastFrame = performance.now();
+        }
+
+        let lastFrame = 0;
+        animate();
+
+        // --------------------------------------------------------
+        // 7. PROJECT SWITCHING LOGIC
+        // --------------------------------------------------------
+
+       function updateUI(index) {
+            const p = projects[index];
+            
+            // Text Animations
+            gsap.fromTo("#p-title", {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5});
+            gsap.fromTo("#p-desc", {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, delay: 0.1});
+            
+            document.getElementById('p-title').innerText = p.title;
+            document.getElementById('p-tech').innerText = p.tech;
+            document.getElementById('p-desc').innerText = p.desc;
+
+            // Glitch Transition
+            const tl = gsap.timeline();
+            tl.to(material.uniforms.uGlitchIntensity, { value: 1.0, duration: 0.1 })
+            .add(() => {
+                // --- FIX STARTS HERE ---
+                
+                // 1. Safe Pause Old Video
+                const oldTexture = material.uniforms.uTexture.value;
+                // Check if the old texture has an image, and if that image has a pause function
+                if(oldTexture.image && typeof oldTexture.image.pause === 'function') {
+                    oldTexture.image.pause();
+                    oldTexture.image.currentTime = 0;
+                }
+
+                // 2. Load New Video
+                const newTexture = loadVideoTexture(p.video);
+                material.uniforms.uTexture.value = newTexture;
+
+                // 3. Safe Play New Video (with slight delay for loading)
+                setTimeout(() => {
+                    if(newTexture.image && typeof newTexture.image.play === 'function') {
+                        newTexture.image.play().catch(e => console.error("Play error:", e));
+                    }
+                }, 50);
+                
+                // --- FIX ENDS HERE ---
+            })
+            .to(material.uniforms.uGlitchIntensity, { value: 0.0, duration: 0.3 });
+        }
+
+        window.nextProject = function() {
+            currentProjectIndex = (currentProjectIndex + 1) % projects.length;
+            updateUI(currentProjectIndex);
+        }
+
+        window.prevProject = function() {
+            currentProjectIndex = (currentProjectIndex - 1 + projects.length) % projects.length;
+            updateUI(currentProjectIndex);
+        }
+
+        // Hover Effect Listeners
+        // We use Raycaster to detect if mouse is over the 3D plane
+        const raycaster = new THREE.Raycaster();
+        
+        window.addEventListener('mousemove', (event) => {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObject(mesh);
+
+            if (intersects.length > 0) {
+                // Mouse is over the video
+                gsap.to(material.uniforms.uHover, { value: 1, duration: 0.5 });
+                document.body.style.cursor = 'pointer';
             } else {
-                header.classList.remove('bg-white', 'shadow-md');
+                // Mouse is away
+                gsap.to(material.uniforms.uHover, { value: 0, duration: 0.5 });
+                document.body.style.cursor = 'default';
             }
         });
-                // *** New Script to Handle Autoplay on Mobile Devices ***
-        document.addEventListener('DOMContentLoaded', () => {
-            // Define the media query for a mobile device screen size (e.g., up to 768px wide)
-            const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-            if (isMobile) {
-                // Find all video elements on the page
-                const videos = document.querySelectorAll('video');
-
-                videos.forEach(video => {
-                    // Remove the autoplay attribute
-                    video.removeAttribute('autoplay');
-                });
-            }
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        window.onload = () => {
+        // 1. Reveal the Start Button
+        const startBtn = document.getElementById('start-btn');
+        const loadingText = document.getElementById('loading-text');
+        
+        if(loadingText) loadingText.style.display = 'none';
+        if(startBtn) startBtn.style.display = 'block';
+
+        // 2. When User Clicks "Enter System"
+        if(startBtn) {
+            startBtn.addEventListener('click', () => {
+                
+                // A. Remove the Loading Screen
+                const loader = document.getElementById('loader');
+                loader.style.opacity = 0;
+                setTimeout(() => { loader.style.display = 'none'; }, 1000);
+
+                // B. Force Play Video (SAFE VERSION)
+                const texture = material.uniforms.uTexture.value;
+                const videoObj = texture.image;
+
+                // CHECK: Is this actually a video?
+                if(videoObj && typeof videoObj.play === 'function') {
+                    videoObj.play().catch(e => console.log("Autoplay prevented:", e));
+                }
+            });
+        }
+    };
+
     </script>
-
 </body>
 </html>
-
