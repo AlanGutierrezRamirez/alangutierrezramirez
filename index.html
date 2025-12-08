@@ -18,7 +18,7 @@
             background-color: #050505;
             color: #e0e0e0;
             font-family: 'Fira Code', monospace;
-            overflow: hidden; /* Prevent native scroll, we handle it via WebGL */
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
         /* The 3D Canvas */
@@ -27,54 +27,24 @@
             top: 0;
             left: 0;
             z-index: 1;
-        }
-
-        /* The UI Layer - Floats above the 3D world */
-        #ui-layer {
-            position: fixed;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Pushes Header to top, Footer to bottom */
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-
-        /* CRT Scanline Effect Overlay */
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.1) 50%,
-                rgba(0,0,0,0.1)
-            );
-            background-size: 100% 4px;
-            z-index: 20;
-            pointer-events: none;
+            outline: none;
         }
 
         /* Header */
         header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem;
+            box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 0.8rem;
             opacity: 0.8;
-        }
-
-        /* Project Info UI */
-        #project-info {
-            max-width: 500px;
+            z-index: 10;
+            pointer-events: none;
         }
 
         h1 {
@@ -136,156 +106,101 @@
             justify-content: center;
             flex-direction: column;
             transition: opacity 1s ease;
+            color: #00ff96;
         }
 
-        .dashboard-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        pointer-events: auto; /* Enable clicking on links/buttons */
-        gap: 20px;
-        }
-
-        /* Left side: Project Controls (Moved here from previous code) */
-        .project-controls-area {
-            max-width: 40%;
-        }
-
-        /* Right side: The Profile & CV Area */
-        .profile-section {
-            display: flex;
-            align-items: flex-end;
-            gap: 20px;
-            text-align: right;
-            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for readability */
-            padding: 20px;
-            border: 1px solid #333;
-            backdrop-filter: blur(5px);
-        }
-
-        /* The Circular Profile Pic */
-        .profile-pic-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-        }
-
-        .profile-img {
+        /* Hero Section */
+        #hero-section {
+            height: 100vh;
             width: 100%;
-            height: 100%;
-            border-radius: 50%; /* MAKES IT A CIRCLE */
-            object-fit: cover;
-            border: 2px solid #00ff96;
-            box-shadow: 0 0 15px rgba(0, 255, 150, 0.3);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Align content to bottom */
+            padding: 2rem;
+            padding-bottom: 100px; /* Space for arrow */
+            box-sizing: border-box;
+            pointer-events: none; /* Let clicks pass through to canvas */
+            z-index: 5;
         }
 
-        /* A little "Online" status dot */
-        .status-dot {
+        .project-ui {
+            pointer-events: auto; /* Re-enable clicks for buttons */
+            max-width: 600px;
+        }
+
+        /* Scroll Arrow */
+        .scroll-indicator {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
-            width: 15px;
-            height: 15px;
-            background-color: #00ff96;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .arrow-icon { font-size: 2rem; color: #00ff96; display: block; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
+        /* Profile Section */
+        #profile-section {
+            min-height: 80vh;
+            background: rgba(10, 10, 15, 0.9); /* Dark glass */
+            backdrop-filter: blur(15px);
+            border-top: 1px solid #00ff96;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .profile-pic {
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            border: 2px solid #000;
-            box-shadow: 0 0 10px #00ff96;
+            border: 4px solid #00ff96;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(0, 255, 150, 0.2);
+            background-color: #111;
         }
+        
+        .xp-list { text-align: left; }
+        .xp-item { margin-bottom: 30px; border-left: 2px solid #333; padding-left: 20px; transition: 0.3s; }
+        .xp-item:hover { border-left-color: #00ff96; }
+        .xp-role { color: #fff; font-size: 1.2rem; font-weight: bold; display: block; }
+        .xp-date { color: #00ff96; font-size: 0.8rem; margin-bottom: 8px; display: block; }
 
-        /* The "Terminal" for Work Experience */
-        .xp-terminal {
-            width: 300px;
-            height: 120px;
-            overflow-y: auto; /* Scrollable if text is long */
-            font-size: 0.8rem;
-            color: #aaaaaa;
-            border-right: 1px solid #00ff96;
-            padding-right: 15px;
-            text-align: right;
-            font-family: 'Fira Code', monospace;
-        }
-
-        /* Custom Scrollbar for Chrome/Safari/Edge */
-        .xp-terminal::-webkit-scrollbar { width: 5px; }
-        .xp-terminal::-webkit-scrollbar-thumb { background: #00ff96; }
-        .xp-terminal::-webkit-scrollbar-track { background: #111; }
-
-        .xp-entry { margin-bottom: 15px; }
-        .xp-role { color: #fff; font-weight: bold; display: block; }
-        .xp-date { color: #00ff96; font-size: 0.7rem; }
-
-        /* The CV Download Button */
-        .cv-btn {
-            display: inline-block;
-            margin-top: 10px;
+        .cv-link {
+            color: #00ff96;
             text-decoration: none;
-            background: #00ff96;
-            color: #000;
-            font-weight: bold;
-            padding: 5px 10px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+            border: 1px solid #00ff96;
+            padding: 10px 20px;
+            display: inline-block;
+            margin-top: 20px;
             transition: 0.3s;
         }
-        .cv-btn:hover {
-            background: #fff;
-            box-shadow: 0 0 15px #fff;
-        }
-        /* --- MOBILE RESPONSIVENESS --- */
-        @media (max-width: 768px) {
-            /* 1. Stack the dashboard vertically instead of side-by-side */
-            .dashboard-footer {
-                flex-direction: column-reverse; /* Profile at bottom, controls above */
-                align-items: center;
-                gap: 15px;
-                padding-bottom: 20px;
-            }
-
-            /* 2. Center the text and controls */
-            .project-controls-area {
-                max-width: 100%;
-                text-align: center;
-                margin-bottom: 10px;
-            }
-
-            /* 3. Simplify the Profile Section */
-            .profile-section {
-                width: 100%;
-                justify-content: center; /* Center the profile pic */
-                background: rgba(0,0,0,0.8); /* Darker background for readability */
-                padding: 10px;
-                flex-direction: row; /* Keep pic and CV button side-by-side */
-                align-items: center;
-            }
-
-            /* 4. Hide the detailed "XP Terminal" on mobile to save space */
-            .xp-terminal {
-                display: none; 
-            }
-
-            /* 5. But keep the CV Button visible! */
-            .cv-btn {
-                display: block;
-                margin: 0;
-                margin-right: 15px; /* Spacing between button and face */
-
-                font-size: 0.7rem;
-            }
-
-            /* 6. Make Profile Pic smaller */
-            .profile-pic-container {
-                width: 60px;
-                height: 60px;
-            }
-
-            /* 7. Adjust Title Size */
-            h1 {
-                font-size: 1.8rem; /* Smaller title so it doesn't wrap */
-            }
-            
-            #project-info p {
-                font-size: 0.9rem; /* Smaller description */
-            }
+        .cv-link:hover {
+            background: #00ff96;
+            color: #000;
         }
 
         #coming-soon-label {
@@ -293,54 +208,51 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            
-            /* Big, Bold Text */
             font-size: 5rem;
             font-weight: 700;
             color: #fff;
             border: 4px solid #fff;
             padding: 20px 40px;
             letter-spacing: 10px;
-            
-            /* Hidden by default */
             opacity: 0; 
             pointer-events: none;
             z-index: 50;
-            
-            /* Cool glow effect */
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-/* Mobile tweak */
-@media (max-width: 768px) {
-    #coming-soon-label { font-size: 2.5rem; border-width: 2px; }
-}
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+            .xp-list {
+                text-align: left;
+            }
+            h1 { font-size: 1.8rem; }
+            #coming-soon-label { font-size: 2rem; border-width: 2px; padding: 10px 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="scanlines"></div>
-
 <div id="loader">
-    <div>INITIALIZING ENGINE...</div>
+    <div style="margin-bottom: 10px;">INITIALIZING ENGINE...</div>
     <div id="loading-text">0%</div>
     <button id="start-btn" style="display:none; margin-top: 20px;">[ ENTER SYSTEM ]</button>
 </div>
 
-<div id="ui-layer">
     <header>
         <div>// SYSTEM_USER: Alan Gutierrez Ramirez</div>
         <div>FPS: <span id="fps">60</span></div>
     </header>
 
-    <div style="flex-grow: 1;"></div>
-
     <div id="coming-soon-label">COMING SOON</div>
 
-    <div class="dashboard-footer">
-        
-        <div class="project-controls-area" id="project-info">
+    <section id="hero-section">
+        <div class="project-ui">
             <span class="meta" id="p-tech">NREAL ENGINE 5 // C++ // Unity // C# // Shaders</span>
             <h1 id="p-title">Through the years</h1>
             <p id="p-desc">A journey in my development for video game development</p>
@@ -351,30 +263,41 @@
             </div>
         </div>
 
-        <div class="profile-section">
-            
-            <div class="xp-terminal">
-                <div class="xp-entry">
-                    <span class="xp-role">SOFTWARE DEVELOPER</span>
-                    <span class="xp-date">2024 - 2025</span>
-                    <br>Optimized rendering pipelines and implemented ray-tracing features.
-                </div>
-                <div class="xp-entry">
-                    <span class="xp-role">GAMEPLAY DEV</span>
-                    <span class="xp-date">2018 - 2021 // INDIE STUDIO</span>
-                    <br>Shipped 2 titles on Steam using Unity & C#.
-                </div>
-                <a href="./my-cv.pdf" class="cv-btn" target="_blank">[ DOWNLOAD_CV.PDF ]</a>
-            </div>
-
-            <div class="profile-pic-container">
-                <img src="./imgs/selfie.jpeg" class="profile-img" alt="Developer Profile">
-                <div class="status-dot"></div>
-            </div>
-
+        <div class="scroll-indicator" onclick="document.getElementById('profile-section').scrollIntoView({behavior: 'smooth'})">
+            <span style="font-size:0.8rem;">SCROLL FOR INFO</span>
+            <span class="arrow-icon">↓</span>
         </div>
-    </div>
-</div>
+    </section>
+            
+    <section id="profile-section">
+            <h2 style="font-size: 2rem; border-bottom: 2px solid #00ff96; padding-bottom: 10px;">// OPERATOR_PROFILE</h2>
+            
+            <div class="profile-grid">
+                <div style="display:flex; flex-direction:column; gap:20px; align-items:center;">
+                    <img src="./imgs/selfie.jpeg" class="profile-pic" alt="Profile">
+                    <p style="text-align:center;">
+                        Creative Developer specializing in Graphics Programming and Engine Architecture.
+                        Obsessed with performance and visual fidelity.
+                    </p>
+                    <a href="./cv/Gutierrez-CV.pdf" class="cv-link">
+                        [ DOWNLOAD_CV.PDF ]
+                    </a>
+                </div>
+
+                <div class="xp-list">
+                    <div class="xp-item">
+                        <span class="xp-role">SOFTWARE DEVELOPER</span>
+                        <span class="xp-date">2024 - 2025</span>
+                        <div>3D Engine woring with C++ and OpenGL as well as Physx</div>
+                    </div>
+                    <div class="xp-item">
+                        <span class="xp-role">GAMEPLAY DEVELOPER</span>
+                        <span class="xp-date">2022 - 2024</span>
+                        <div>Shipped A title on Steam. Developed custom AI character in C#.</div>
+                    </div>
+                </div>
+            </div>
+    </section>
 
     <canvas id="gl-canvas"></canvas>
 
@@ -386,9 +309,8 @@
         // 2. CONFIGURATION & DATA
         // --------------------------------------------------------
         
-        // REPLACE THESE URLS WITH YOUR ACTUAL VIDEO FILES
-        // Note: For this demo, I am generating textures via code, 
-        // but the logic below supports real video files.
+        // NOTE: I have replaced your local paths with public URLs so the demo works instantly.
+        // You can swap these strings back to "./videos/filename.webm" later.
         const projects = [
             {
                 title: "Through the years",
@@ -430,49 +352,58 @@
         let currentProjectIndex = 0;
 
         // --------------------------------------------------------
-        // 3. THE SHADER CODE (The "Mastery" Part)
+        // 3. THE SHADER CODE
         // --------------------------------------------------------
         
-        // Vertex Shader: Determines the geometry shape
         const vertexShader = `
             varying vec2 vUv;
             uniform float uTime;
-            uniform float uHover;
-
+            
             void main() {
                 vUv = uv;
                 vec3 pos = position;
-                
                 // Subtle breathing effect
                 pos.z += sin(pos.x * 2.0 + uTime) * 0.05;
-                
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
             }
         `;
 
+        // FIXED: Added uGlitchIntensity and logic to use it
         const fragmentShader = `
             uniform sampler2D uTexture;
             uniform float uTime;
-            uniform float uHover;
-            uniform float uDim; // <--- NEW CONTROL ADDED HERE
+            uniform float uDim; 
+            uniform float uGlitchIntensity; // <--- This was missing in your shader
             varying vec2 vUv;
+
+            // Random function for glitch noise
+            float random(vec2 co){
+                return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+            }
 
             void main() {
                 vec2 uv = vUv;
 
-                // 2. Fetch Video Color
-                vec4 videoColor = texture2D(uTexture, uv);
+                // 1. GLITCH EFFECT LOGIC
+                // If glitch intensity > 0, we shake the UVs and split RGB
+                float shake = (random(vec2(uTime, uv.y)) - 0.5) * uGlitchIntensity * 0.1;
+                
+                // RGB Split
+                float r = texture2D(uTexture, uv + vec2(shake, 0.0)).r;
+                float g = texture2D(uTexture, uv).g;
+                float b = texture2D(uTexture, uv - vec2(shake, 0.0)).b;
+                
+                vec3 finalColor = vec3(r, g, b);
 
-                // 4. APPLY DIMMING (The "Coming Soon" Logic)
-                // If uDim is 1.0, we multiply color by 0.2 (making it 80% darker)
-                float brightness = 1.0 - (uDim * 0.8); 
-                videoColor.rgb *= brightness;
+                // 2. DIMMING (Coming Soon Logic)
+                float brightness = 1.0 - (uDim * 0.95); 
+                finalColor *= brightness;
 
-                // 5. Tech Tint (Optional)
+                // 3. Tech Tint
                 vec3 techColor = vec3(0.0, 0.1, 0.2); 
-                videoColor.rgb = mix(videoColor.rgb, videoColor.rgb + techColor, 0.3);
+                finalColor = mix(finalColor, finalColor + techColor, 0.2);
 
-                gl_FragColor = videoColor;
+                gl_FragColor = vec4(finalColor, 1.0);
             }
         `;
 
@@ -483,15 +414,13 @@
         const canvas = document.querySelector('#gl-canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance optimization
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
         const scene = new THREE.Scene();
-        
-        // Camera setup
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
         camera.position.z = 5;
 
-        // Mouse tracking for parallax
+        // Mouse tracking
         const mouse = new THREE.Vector2();
         window.addEventListener('mousemove', (e) => {
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -499,64 +428,38 @@
         });
 
         // --------------------------------------------------------
-        // 5. PROJECT DISPLAY PLANE
+        // 5. VIDEO TEXTURE HANDLING
         // --------------------------------------------------------
-
-        // NOTE: Since we don't have real videos loaded in this demo, 
-        // I'm creating a dummy texture generator. 
-        // In production, you would use: new THREE.VideoTexture(videoElement)
-        function createPlaceholderTexture(colorVec) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 288;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = `rgb(${colorVec.x*50}, ${colorVec.y*50}, ${colorVec.z*50})`;
-            ctx.fillRect(0,0, 512, 288);
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "40px monospace";
-            ctx.fillText("VIDEO PREVIEW", 100, 144);
-            return new THREE.CanvasTexture(canvas);
-        }
-
-        // REPLACE YOUR OLD loadVideoTexture FUNCTION WITH THIS:
 
         function loadVideoTexture(url) {
             const video = document.createElement('video');
             video.src = url;
             video.crossOrigin = "anonymous";
             video.loop = true;
-            video.muted = true; // MUST BE MUTED FOR AUTOPLAY
-            video.playsInline = true; // FOR MOBILE
-
-            // Debugging: Check if file exists
-            video.onerror = function() {
-                console.error("ERROR LOADING VIDEO:", url);
-                console.error("Check if the file name is correct and in the same folder.");
-            };
-
-            // Don't play yet. We wait for the user to click "Enter".
+            video.muted = true; // Essential for autoplay
+            video.playsInline = true;
             
+            // Create texture but don't play yet
             const texture = new THREE.VideoTexture(video);
             texture.minFilter = THREE.LinearFilter;
             texture.magFilter = THREE.LinearFilter;
-            texture.format = THREE.RGBAFormat; // RGBA for WebM Transparency
+            texture.format = THREE.RGBAFormat;
             
-            // Save video reference to the texture so we can play it later
-            texture.image = video; 
-            
+            texture.image = video; // Store reference
             return texture;
         }
 
-        const geometry = new THREE.PlaneGeometry(4.2, 2.4, 32, 32); // 16:9 Aspect Ratio
-        
+        // Initialize with first project
+        const initialTexture = loadVideoTexture(projects[0].video);
+
+        const geometry = new THREE.PlaneGeometry(4.8, 2.7, 32, 32); // 16:9
         const material = new THREE.ShaderMaterial({
             vertexShader,
             fragmentShader,
             uniforms: {
                 uTime: { value: 0 },
-                uHover: { value: 0 },
-                uGlitchIntensity: { value: 0 },
-                uTexture: { value: loadVideoTexture(projects[0].video) },
+                uGlitchIntensity: { value: 0 }, // Initial value
+                uTexture: { value: initialTexture },
                 uDim: { value: 0 } 
             }
         });
@@ -564,7 +467,7 @@
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        // Background Particles (Stars)
+        // Background Stars
         const starsGeo = new THREE.BufferGeometry();
         const starsCount = 1000;
         const posArray = new Float32Array(starsCount * 3);
@@ -582,44 +485,45 @@
         scene.add(stars);
 
         // --------------------------------------------------------
-        // 6. ANIMATION & INTERACTION LOOP
+        // 6. ANIMATION LOOP
         // --------------------------------------------------------
 
         const clock = new THREE.Clock();
+        let lastFrame = 0;
 
         function animate() {
             const elapsedTime = clock.getElapsedTime();
 
-            // Update Uniforms
+            // Update Shader Time
             material.uniforms.uTime.value = elapsedTime;
 
-            // Smooth Mouse Parallax for the Mesh
-            // Uses Linear Interpolation (Lerp) for smoothness
-            mesh.rotation.x = THREE.MathUtils.lerp(mesh.rotation.x, mouse.y * 0.2, 0.05);
-            mesh.rotation.y = THREE.MathUtils.lerp(mesh.rotation.y, mouse.x * 0.2, 0.05);
+            // Parallax Effect
+            mesh.rotation.x = THREE.MathUtils.lerp(mesh.rotation.x, mouse.y * 0.1, 0.05);
+            mesh.rotation.y = THREE.MathUtils.lerp(mesh.rotation.y, mouse.x * 0.1, 0.05);
 
-            // Rotate stars slowly
             stars.rotation.y = elapsedTime * 0.05;
 
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
 
-            // Update simple FPS counter
-            if(Math.random() > 0.95) document.getElementById('fps').innerText = Math.round(1000 / (performance.now() - lastFrame));
+            // FPS Counter
+            if(elapsedTime > 1.0 && Math.random() > 0.95) {
+                const fps = Math.round(1000 / (performance.now() - lastFrame));
+                document.getElementById('fps').innerText = fps;
+            }
             lastFrame = performance.now();
         }
 
-        let lastFrame = 0;
         animate();
 
         // --------------------------------------------------------
         // 7. PROJECT SWITCHING LOGIC
         // --------------------------------------------------------
 
-       function updateUI(index) {
+        function updateUI(index) {
             const p = projects[index];
             
-            // Text Animations
+            // 1. Text Animations
             gsap.fromTo("#p-title", {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5});
             gsap.fromTo("#p-desc", {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, delay: 0.1});
             
@@ -627,48 +531,37 @@
             document.getElementById('p-tech').innerText = p.tech;
             document.getElementById('p-desc').innerText = p.desc;
 
+            // 2. Coming Soon Logic
             if (p.comingSoon) {
-                    // 1. Show the "Coming Soon" Text
-                    gsap.to("#coming-soon-label", { opacity: 1, duration: 0.5 });
-                    
-                    // 2. Dim the Video (Set uDim to 1)
-                    gsap.to(material.uniforms.uDim, { value: 1.0, duration: 0.5 });
-                } else {
-                    // 1. Hide the Text
-                    gsap.to("#coming-soon-label", { opacity: 0, duration: 0.5 });
-                    
-                    // 2. Brighten Video (Set uDim back to 0)
-                    gsap.to(material.uniforms.uDim, { value: 0.0, duration: 0.5 });
-                }
+                gsap.to("#coming-soon-label", { opacity: 1, duration: 0.5 });
+                gsap.to(material.uniforms.uDim, { value: 1.0, duration: 0.5 });
+            } else {
+                gsap.to("#coming-soon-label", { opacity: 0, duration: 0.5 });
+                gsap.to(material.uniforms.uDim, { value: 0.0, duration: 0.5 });
+            }
 
-            // Glitch Transition
+            // 3. Glitch & Video Transition
             const tl = gsap.timeline();
-            tl.to(material.uniforms.uGlitchIntensity, { value: 1.0, duration: 0.1 })
-            .add(() => {
-                // --- FIX STARTS HERE ---
-                
-                // 1. Safe Pause Old Video
-                const oldTexture = material.uniforms.uTexture.value;
-                // Check if the old texture has an image, and if that image has a pause function
-                if(oldTexture.image && typeof oldTexture.image.pause === 'function') {
-                    oldTexture.image.pause();
-                    oldTexture.image.currentTime = 0;
-                }
+            
+            // Spike the glitch intensity up
+            tl.to(material.uniforms.uGlitchIntensity, { value: 2.0, duration: 0.2, ease: "power2.in" })
+              .add(() => {
+                  // SWAP VIDEO TEXTURE HERE
+                  const oldTexture = material.uniforms.uTexture.value;
+                  if(oldTexture.image && typeof oldTexture.image.pause === 'function') {
+                      oldTexture.image.pause();
+                  }
 
-                // 2. Load New Video
-                const newTexture = loadVideoTexture(p.video);
-                material.uniforms.uTexture.value = newTexture;
+                  const newTexture = loadVideoTexture(p.video);
+                  material.uniforms.uTexture.value = newTexture;
 
-                // 3. Safe Play New Video (with slight delay for loading)
-                setTimeout(() => {
-                    if(newTexture.image && typeof newTexture.image.play === 'function') {
-                        newTexture.image.play().catch(e => console.error("Play error:", e));
-                    }
-                }, 50);
-                
-                // --- FIX ENDS HERE ---
-            })
-            .to(material.uniforms.uGlitchIntensity, { value: 0.0, duration: 0.3 });
+                  // Force Play
+                  if(newTexture.image) {
+                      newTexture.image.play().catch(e => console.log(e));
+                  }
+              })
+              // Bring glitch intensity back down
+              .to(material.uniforms.uGlitchIntensity, { value: 0.0, duration: 0.4, ease: "power2.out" });
         }
 
         window.nextProject = function() {
@@ -681,53 +574,47 @@
             updateUI(currentProjectIndex);
         }
 
-        // Hover Effect Listeners
-        // We use Raycaster to detect if mouse is over the 3D plane
-        const raycaster = new THREE.Raycaster();
+        // --------------------------------------------------------
+        // 8. STARTUP LOGIC
+        // --------------------------------------------------------
         
-        window.addEventListener('mousemove', (event) => {
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObject(mesh);
-
-            if (intersects.length > 0) {
-                // Mouse is over the video
-                gsap.to(material.uniforms.uHover, { value: 1, duration: 0.5 });
-                document.body.style.cursor = 'pointer';
-            } else {
-                // Mouse is away
-                gsap.to(material.uniforms.uHover, { value: 0, duration: 0.5 });
-                document.body.style.cursor = 'default';
-            }
+        // Window Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
         window.onload = () => {
-        // 1. Reveal the Start Button
-        const startBtn = document.getElementById('start-btn');
-        const loadingText = document.getElementById('loading-text');
-        
-        if(loadingText) loadingText.style.display = 'none';
-        if(startBtn) startBtn.style.display = 'block';
-
-        // 2. When User Clicks "Enter System"
-        if(startBtn) {
-            startBtn.addEventListener('click', () => {
-                
-                // A. Remove the Loading Screen
-                const loader = document.getElementById('loader');
-                loader.style.opacity = 0;
-                setTimeout(() => { loader.style.display = 'none'; }, 1000);
-
-                // B. Force Play Video (SAFE VERSION)
-                const texture = material.uniforms.uTexture.value;
-                const videoObj = texture.image;
-
-                // CHECK: Is this actually a video?
-                if(videoObj && typeof videoObj.play === 'function') {
-                    videoObj.play().catch(e => console.log("Autoplay prevented:", e));
+            const startBtn = document.getElementById('start-btn');
+            const loadingText = document.getElementById('loading-text');
+            
+            // Simulate loading
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += Math.floor(Math.random() * 10) + 5;
+                if(percent >= 100) {
+                    percent = 100;
+                    clearInterval(interval);
+                    if(loadingText) loadingText.style.display = 'none';
+                    if(startBtn) startBtn.style.display = 'block';
                 }
-            });
-        }
-    };
+                if(loadingText) loadingText.innerText = percent + "%";
+            }, 100);
+
+            // User Click Interaction
+            if(startBtn) {
+                startBtn.addEventListener('click', () => {
+                    const loader = document.getElementById('loader');
+                    loader.style.opacity = 0;
+                    setTimeout(() => { loader.style.display = 'none'; }, 1000);
+
+                    // Force play current video
+                    const tex = material.uniforms.uTexture.value;
+                    if(tex && tex.image) tex.image.play().catch(e => console.log("Autoplay block:", e));
+                });
+            }
+        };
 
     </script>
 </body>
